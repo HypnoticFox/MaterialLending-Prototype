@@ -1,0 +1,97 @@
+.site-logo {
+    height: auto;
+    width: 100%;
+    fill: var(--bulma-text-strong);
+}
+
+.htmx-swapping .fade-me-out {
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+}
+
+.htmx-added .fade-me-in {
+    opacity: 0;
+}
+.fade-me-in {
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+}
+
+/* Theme selector */
+.is-sun {
+    --h: 49;
+    --s: 100%;
+    --l: 60%;
+}
+
+.is-moon {
+    --h: 268;
+    --s: 100%;
+    --l: 50%;
+}
+
+.is-system {
+    --h: 120;
+    --s: 100%;
+    --l: 21%;
+}
+
+.theme-icon {
+    fill:hsl(var(--h), var(--s), var(--l));
+}
+
+.theme-cycle {
+    position: relative;
+    height: 2.5rem;
+    width: 2.5rem;
+    overflow: hidden;
+    border: none !important;
+}
+
+.theme-cycles {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    width: 2.5rem;
+    height: 5rem;
+}
+
+.theme-cycle .icon {
+    margin: auto !important;
+}
+
+.theme-cycle.is-moon .theme-cycles {
+    transform: translate3d(0,-2.5rem,0);
+}
+
+@media (min-width: 1024px) {
+    .dropdown-menu.js-themes {
+        left: auto;
+        right: -2.5rem;
+    }
+}
+
+.js-themes .dropdown-content {
+    width: 10rem;
+    padding: 1rem;
+    border-color: var(--bulma-border);
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: var(--bulma-shadow);
+}
+
+.js-themes .dropdown-item {
+    color: var(--bulma-text-strong);
+    padding: .5rem .75rem;
+    border-radius: .5rem;
+}
+
+.js-themes .dropdown-item.is-active {
+    background-color: hsla(var(--h), var(--s), var(--l), .2);
+}
+
+.js-themes .dropdown-item:hover {
+    background-color: hsla(var(--h), var(--s), var(--l), .1);
+}

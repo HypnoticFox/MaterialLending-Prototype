@@ -1,0 +1,48 @@
+services:
+  web:
+    build:
+      context: ./src/
+      dockerfile: Dockerfile
+    entrypoint: /app/start-reload.sh
+    container_name: web-container
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    restart: always
+    volumes:
+      - ./src:/app
+    ports:
+      - 7080:80
+    environment:
+      PROJECT_ENVIRONMENT: dev
+      PROJECT_DATABASE_NAME: project
+      PROJECT_DATABASE_USER: admin
+      PROJECT_DATABASE_PASSWORD: admin
+      PROJECT_DATABASE_HOST: db
+      PROJECT_DATABASE_PORT: 5432
+      PROJECT_ADMIN_PATH: 'secret/'
+      DJANGO_SECRET_KEY: '+80bii=$%g+7tn8s9s(*3)v)_exz2t38^@%-p_q7s4)c+)jb8m'
+  
+  db:
+    image: postgres
+    command: ["postgres", "-c", "log_statement=all"]
+    container_name: postgres-container
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: project
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=$${POSTGRES_DB} --username=$${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  db-data:

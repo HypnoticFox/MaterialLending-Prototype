@@ -1,0 +1,26 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block title %}Producten{% endblock %}
+
+{% block main %}
+    <link rel="stylesheet" href="{% static 'products/style.css' %}">
+    {% component_css_dependencies %}
+
+    <section class="section">
+        <h3 class="title is-3">Producten</h1> {{products_page.len}}
+        
+        {% if not products_page.len %}
+            <p>Geen resultaat</p>
+        {% else %}
+            {% for product in products_page %}
+                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            {% endfor %}
+            
+            {% component "pagination_navigation" page_obj=products_page  %} {% endcomponent %}
+        {% endif %}
+    </section>
+
+    {% component_js_dependencies %}
+{% endblock main %}
