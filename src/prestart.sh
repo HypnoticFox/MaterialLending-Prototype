@@ -22,7 +22,10 @@ else
     echo "prestart.sh: (DEVELOPMENT_MODE) Adding some seed data"
     python manage.py shell -c "
 from django.contrib.auth.models import Group;
-if not Group.objects.filter(name='example').exists():
+from products.models import ProductCategory;
+if not Group.objects.exists():
     Group.objects.create(name='example');
+if not ProductCategory.objects.exists():
+    ProductCategory.objects.create(name='other', order=999);
     "
 fi

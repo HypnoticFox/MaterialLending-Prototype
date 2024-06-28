@@ -1,13 +1,14 @@
 {% load static %}
 {% load django_htmx %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta name="htmx-config" content='{"refreshOnHistoryMiss":"true"}'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js" defer></script>
     {% django_htmx_script %}
 
     <script src="{% static 'js/site.js' %}" defer></script>
@@ -44,9 +45,6 @@
             </div>
             <div id="main-navbar" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item" href="{% url 'polls:index' %}">
-                        Polls
-                    </a>
                     <a class="navbar-item" href="{% url 'products:index' %}">
                         Materiaal
                     </a>
@@ -73,10 +71,10 @@
                                 <button id="js-cycle" class="theme-cycle button" data-target="js-themes" aria-haspopup="true" aria-controls="js-themes">
                                     <div class="theme-cycles">
                                         <span class="icon theme-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none" aria-hidden="true"/><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm8,24a64,64,0,1,0,64,64A64.07,64.07,0,0,0,128,64ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></svg>
+                                            <iconify-icon icon="ph:sun-fill" width="1.5em"></iconify-icon>
                                         </span>
                                         <span class="icon theme-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none" aria-hidden="true"/><path d="M235.54,150.21a104.84,104.84,0,0,1-37,52.91A104,104,0,0,1,32,120,103.09,103.09,0,0,1,52.88,57.48a104.84,104.84,0,0,1,52.91-37,8,8,0,0,1,10,10,88.08,88.08,0,0,0,109.8,109.8,8,8,0,0,1,10,10Z"/></svg>
+                                            <iconify-icon icon="ph:moon-fill" width="1.5em"></iconify-icon>
                                         </span>
                                     </div>
                                 </button>
@@ -84,25 +82,31 @@
                         
                             <div id="js-themes" class="dropdown-menu js-themes" role="menu">
                                 <div class="dropdown-content">
-                                    <a data-scheme="light" href="#" class="dropdown-item is-sun" aria-label="Light mode">
-                                        <span class="icon theme-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none" aria-hidden="true"/><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm8,24a64,64,0,1,0,64,64A64.07,64.07,0,0,0,128,64ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></svg>
-                                        </span>
-                                        <span>Light</span>
+                                    <a data-scheme="light" class="dropdown-item is-sun" aria-label="Light mode" role="button" tabindex="0">
+                                        <div class="icon-text">
+                                            <span class="icon theme-icon">
+                                                <iconify-icon icon="ph:sun-fill" width="1.5em"></iconify-icon>
+                                            </span>
+                                            <span class="ml-1">Light</span>
+                                        </div>
                                     </a>
                                     
-                                    <a data-scheme="dark" href="#" class="dropdown-item is-moon" aria-label="Dark mode">
-                                        <span class="icon theme-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none" aria-hidden="true"/><path d="M235.54,150.21a104.84,104.84,0,0,1-37,52.91A104,104,0,0,1,32,120,103.09,103.09,0,0,1,52.88,57.48a104.84,104.84,0,0,1,52.91-37,8,8,0,0,1,10,10,88.08,88.08,0,0,0,109.8,109.8,8,8,0,0,1,10,10Z"/></svg>
-                                        </span>
-                                        <span>Dark</span>
+                                    <a data-scheme="dark" class="dropdown-item is-moon" aria-label="Dark mode" role="button" tabindex="0">
+                                        <div class="icon-text">
+                                            <span class="icon theme-icon">
+                                                <iconify-icon icon="ph:moon-fill" width="1.5em"></iconify-icon>
+                                            </span>
+                                            <span class="ml-1">Dark</span>
+                                        </div>
                                     </a>
                                     
-                                    <a data-scheme="system" href="#" class="dropdown-item is-system" aria-label="System mode">
-                                        <span class="icon theme-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none" aria-hidden="true"/><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM40,128A88,88,0,0,1,190.2,65.8L65.8,190.2A87.76,87.76,0,0,1,40,128Z"/></svg>
-                                        </span>
-                                        <span>Auto</span>
+                                    <a data-scheme="system" class="dropdown-item is-system" aria-label="System mode" role="button" tabindex="0">
+                                        <div class="icon-text">
+                                            <span class="icon theme-icon">
+                                                <iconify-icon icon="ph:circle-half-tilt-fill" width="1.5em"></iconify-icon>
+                                            </span>
+                                            <span class="ml-1">Auto</span>
+                                        </div>
                                     </a>
                                 </div>
                             </div>
@@ -116,5 +120,24 @@
     <main id="main" class="fade-me-out fade-me-in">
         {% block main %}{% endblock main %}
     </main>
+
+    <footer class="footer mt-auto">
+        <div class="ml-auto" style="width: fit-content;">
+            <div>
+                <span>Prototype gebouwd door Jarno Vos.</span>
+            </div>
+            <div>
+                <span class="icon-text is-flex is-align-items-center">
+                    <span>Source code:</span>
+                    <a class="is-flex" href="https://github.com/HypnoticFox/MaterialLending-Prototype">
+                        <span>MaterialLending-Prototype</span>
+                        <span class="icon ml-1">
+                            <iconify-icon icon="mdi:github" width="1.5em"></iconify-icon>
+                        </span>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

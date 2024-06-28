@@ -27,11 +27,11 @@ admin.site.login = secure_admin_login(admin.site.login)
 admin.site.logout = allauth_logout
 
 urlpatterns = [
-    path("polls/", decorator_include(group_required("example"), "polls.urls")),
     path("products/", decorator_include(group_required("example"), "products.urls")),
     path('accounts/', include('allauth.urls')),
-    path(os.getenv("PROJECT_ADMIN_PATH") or "admin/", admin.site.urls),
+    path(os.getenv("DJANO_ADMIN_PATH") or "admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-    path("health-check", views.health_check, name="health-check"),
+    path("cloudinary-upload-sign/", views.generate_cloudinary_upload_signature, name="cloudinary-upload-signature"),
+    path("health-check/", views.health_check, name="health-check"),
     path("", include("home.urls")),
 ]

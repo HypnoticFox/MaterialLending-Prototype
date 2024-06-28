@@ -1,0 +1,7 @@
+version: 2
+authtoken: ngrok_authtoken
+tunnels:
+  localnginx:
+    proto: http
+    addr: "http://web"
+    domain: your-free-domain.ngrok-free.app

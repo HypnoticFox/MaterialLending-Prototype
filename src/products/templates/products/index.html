@@ -1,26 +1,80 @@
-{% extends base_template %}
+{% extends request.htmx|yesno:"base_partial.html,base_complete.html" %}
 
+{% load cloudinary %}
 {% load static %}
 
 {% block title %}Producten{% endblock %}
 
 {% block main %}
     <link rel="stylesheet" href="{% static 'products/style.css' %}">
-    {% component_css_dependencies %}
 
-    <section class="section">
-        <h3 class="title is-3">Producten</h1> {{products_page.len}}
+    <div class="container mx-auto" style="min-width: fit-content; width: 50%">
+        <div class="level is-mobile">
+            <div class="level-left">
+                <div class="level-item ml-2">
+                    <h3 class="title is-3">Producten</h3>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item mr-2">
+                    <a href="{% url 'products:new' %}" class="button is-primary is-outlined">
+                        <span class="icon-text">
+                            <div class="icon">
+                                <iconify-icon icon="ph:plus-circle-bold" width="1.8em"></iconify-icon>
+                            </div>
+                            <span>Nieuw</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
         
-        {% if not products_page.len %}
+        {% if products_page.paginator.count == 0 %}
             <p>Geen resultaat</p>
         {% else %}
-            {% for product in products_page %}
-                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-            {% endfor %}
+            <div class="block">
+                <table class="table is-bordered is-striped is-hoverable" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            {% if use_photos %}
+                                <th class="has-text-centered">Foto</th>
+                            {% endif %}
+                            <th>Naam</th>
+                            <th class="has-text-centered">#</th>
+                            <th class="has-text-centered">Categorie</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products_page %}
+                            <tr 
+                                hx-get="{{ product.get_absolute_url }}" 
+                                hx-on::confirm="htmxOpenUrlInNewTabWithCtrlOrCmd(this, event);"
+                                hx-trigger="click" 
+                                hx-push-url="true"
+                                class="is-clickable align"
+                                style="height: {{ use_photos|yesno:"121px,4em" }};"
+                            >
+                                {% if use_photos %}
+                                    <td class="is-align-content-center" style="width: 0;">
+                                    {% if product.image_public_id %}
+                                        <figure class="image is-96x96">
+                                            <img src="{% cloudinary_url product.image_public_id type="authenticated" sign_url="True" aspect_ratio="1:1" height=128 crop="auto" gravity="auto" fetch_format="jpg" %}">
+                                        </figure>
+                                    {% endif %}
+                                    </td>
+                                {% endif %}
+                                <td class="is-align-content-center">{{ product.name }}</td>
+                                <td class="is-align-content-center has-text-centered" style="width: 5em;">{{ product.amount }}</td>
+                                <td class="is-align-content-center has-text-centered" style="width: 10em;">{{ product.category }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <span class="is-size-7 is-hidden-touch">Gebruik <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + klik om een product in een aparte tab te openen</span>
+            </div>
             
             {% component "pagination_navigation" page_obj=products_page  %} {% endcomponent %}
         {% endif %}
-    </section>
+    </div>
 
-    {% component_js_dependencies %}
 {% endblock main %}

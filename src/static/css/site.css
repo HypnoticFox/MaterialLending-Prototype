@@ -1,3 +1,10 @@
+body {
+    min-width: min-content;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .site-logo {
     height: auto;
     width: 100%;
@@ -15,6 +22,84 @@
 .fade-me-in {
     opacity: 1;
     transition: opacity 200ms ease-out;
+}
+
+img:not([src]), img[src=""], img[src="None"] {
+    display: none;
+}
+
+/* Web Speech */
+
+.speech-recognition-icon {
+    pointer-events: auto !important;
+}
+
+.speech-animation-circle {
+    display: none;
+    position: absolute;
+    background: hsla(0, 100%, 50%, 0.6);
+    width: 2.2em;
+    height: 2.2em;
+    border-radius: 100%;
+    z-index: -1;
+}
+
+.speech-animation-circle.active {
+    display: inline;
+    animation: grow 1.5s infinite;
+}
+    
+@keyframes grow {
+    0% {
+        transform: scale( 0.5 );
+    }
+    
+    50% {
+        transform: scale( 1 );
+    }
+    
+    100% {
+        transform: scale( 0.5 );
+    }
+}
+
+/* Light mode variables */
+
+/* :root {
+} */
+
+/* Dark mode variables */
+
+/* :root {
+} */
+
+/* Light mode overrides */
+
+/* @media (prefers-color-scheme: dark) {
+    :root:not([data-theme=light]) {
+    }
+}
+
+:root[data-theme=dark] {
+} */
+
+/* Bulma changes */
+
+.level.is-mobile .level-left, .level.is-mobile .level-right {
+    flex-direction: row;
+}
+
+.button.is-outlined {
+    border-width: medium;
+    font-weight: bold;
+}
+
+.control {
+    --bulma-input-icon-color: var(--bulma-text-weak);
+}
+
+.container {
+    padding : 1.5rem;
 }
 
 /* Theme selector */
@@ -37,7 +122,7 @@
 }
 
 .theme-icon {
-    fill:hsl(var(--h), var(--s), var(--l));
+    color:hsl(var(--h), var(--s), var(--l));
 }
 
 .theme-cycle {

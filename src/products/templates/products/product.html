@@ -1,0 +1,114 @@
+{% extends request.htmx|yesno:"base_partial.html,base_complete.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+    {% if new_product %}
+        Product aanmaken
+    {% else %}
+        Product wijzigen
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <link rel="stylesheet" href="{% static 'products/style.css' %}">
+
+    <div class="container">
+        <div class="columns">
+            <div class="column 
+                is-8-widescreen is-offset-2-widescreen
+                is-10-desktop is-offset-1-desktop
+                ">
+                <form method="post">
+                    {% csrf_token %}
+                
+                    {% component "form_errors" error_list=form.non_field_errors extra_classes="mb-2"  %} {% endcomponent %}
+                
+                    {% with WIDGET_ERROR_CLASS='is-danger' %}
+        
+                        {% if use_photos %}
+                            {{ form.image_public_id }}
+                            {% component "form_cloudinary_upload" input_id=form.image_public_id.id_for_label image_public_id=form.image_public_id.value %} {% endcomponent %}
+                        {% endif %}
+                
+                        <div class="field">
+                            <label class="label" for="{{ form.name.id_for_label }}">
+                                {{form.name.label}}
+                            </label>
+                            
+                            <div class="control has-speech-recognition has-icons-right">
+                                {% render_field form.name class+="input" %}
+                            </div>
+                
+                            {% component "form_errors" error_list=form.name.errors  %} {% endcomponent %}
+                        </div>
+                
+                        <div class="field">
+                            <label class="label" for="{{ form.description.id_for_label }}">
+                                {{form.description.label}}
+                            </label>
+                            
+                            <div class="control has-speech-recognition has-icons-right">
+                                {% render_field form.description class+="textarea" rows=3 %}
+                            </div>
+                
+                            {% component "form_errors" error_list=form.description.errors  %} {% endcomponent %}
+                        </div>
+                
+                        <div class="field">
+                            <label class="label" for="{{ form.amount.id_for_label }}">
+                                {{form.amount.label}}
+                            </label>
+                            
+                            <div class="control">
+                                {% render_field form.amount class+="input" %}
+                            </div>
+                
+                            {% component "form_errors" error_list=form.amount.errors %} {% endcomponent %}
+                        </div>
+                
+                        <div class="field">
+                            <label class="label" for="{{ form.category.id_for_label }}">
+                                {{form.category.label}}
+                            </label>
+                            
+                            <div class="control">
+                                {% render_field form.category class+="input" %}
+                            </div>
+                
+                            {% component "form_errors" error_list=form.category.errors  %} {% endcomponent %}
+                        </div>
+                
+                    {% endwith %}
+                
+                    <div class="field is-grouped">
+                        {% if new_product %}
+                        <div class="control">
+                            <button type="submit" name="redirect-to" value="index" class="button is-link">
+                                Opslaan
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button type="submit" name="redirect-to" value="new" class="button is-link">
+                                Opslaan en nieuwe
+                            </button>
+                        </div>
+                        {% else %}
+                        <div class="control">
+                            <button type="submit" name="redirect-to" value="index" class="button is-link">
+                                Wijzigingen opslaan
+                            </button>
+                        </div>
+                        {% endif %}
+                        <div class="control">
+                            <a href="{% url 'products:index' %}" class="button is-link is-light">Terug</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'products/script.js' %}" defer></script>
+{% endblock main %}

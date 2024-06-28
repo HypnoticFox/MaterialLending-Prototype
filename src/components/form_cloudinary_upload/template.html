@@ -1,0 +1,19 @@
+{% load cloudinary %}
+{% load static %}
+
+{{ cloudinary_upload_info|json_script:"cloudinary-upload-info" }}
+
+<div id="upload-image-field" class="field">
+    <div class="block upload-image-block">
+        <figure class="image">
+            <img id="upload-image" style="max-height: 50vh; width: auto;" src="{% cloudinary_url image_public_id type="authenticated" sign_url="True" aspect_ratio="1:1" height=1024 crop="auto" gravity="auto" fetch_format="jpg" %}">
+        </figure>
+    </div>
+    
+    <div class="block">
+        <a id="upload-widget-button" class="button" role="button">Upload foto</a>
+    </div>
+</div>
+
+<script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript" defer></script>
+<script src="{% static 'form_cloudinary_upload/script.js' %}" defer></script>

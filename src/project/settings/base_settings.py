@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -31,17 +32,18 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = list(filter(None, os.getenv("DJANGO_ALLOWED_HOSTS", '127.0.0.1,localhost').split(",")))
+CSRF_TRUSTED_ORIGINS = list(filter(None, os.getenv("DJANGO_ALLOWED_CSRF_TRUSTED_ORIGINS", 'http://127.0.0.1,http://localhost').split(",")))
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
-    'polls.apps.PollsConfig',
     'products.apps.ProductsConfig',
     'allauth',
     'allauth.account',
+    'cloudinary',
     'django_htmx',
     'django_components',
     'django_components.safer_staticfiles',
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.postgres',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
@@ -67,6 +70,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     'project.middleware.HtmxHandlingMiddleware',
+    'django_components.middleware.ComponentDependencyMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -95,6 +99,10 @@ TEMPLATES = [
         },
     },
 ]
+
+COMPONENTS = {
+    "RENDER_DEPENDENCIES": True,
+}
 
 
 STORAGES = {
@@ -194,4 +202,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Products settings
 
-USE_PHOTOS = False
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
+
+USE_PHOTOS = bool(CLOUDINARY_CLOUD_NAME) and bool(CLOUDINARY_API_KEY) and bool(CLOUDINARY_API_SECRET)
+
+if USE_PHOTOS:
+    cloudinary.config(
+        cloud_name = CLOUDINARY_CLOUD_NAME,
+        api_key = CLOUDINARY_API_KEY,
+        api_secret =  CLOUDINARY_API_SECRET,
+        signature_algorithm = "sha256",
+        secure = True
+    )

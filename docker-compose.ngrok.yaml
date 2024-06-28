@@ -1,0 +1,36 @@
+services:
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
+    ports:
+      - 4040:4040
+    depends_on:
+      - web
+
+  web:
+    extends:
+      file: docker-compose.yaml
+      service: web
+    environment:
+      DJANGO_ALLOWED_HOSTS: '.ngrok-free.app,127.0.0.1,localhost'
+      DJANGO_ALLOWED_CSRF_TRUSTED_ORIGINS: 'https://*.ngrok-free.app,http://127.0.0.1,http://localhost'
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  db:
+    extends:
+      file: docker-compose.yaml
+      service: db
+
+volumes:
+  db-data:
+  

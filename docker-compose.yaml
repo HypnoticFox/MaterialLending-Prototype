@@ -21,8 +21,13 @@ services:
       PROJECT_DATABASE_PASSWORD: admin
       PROJECT_DATABASE_HOST: db
       PROJECT_DATABASE_PORT: 5432
-      PROJECT_ADMIN_PATH: 'secret/'
-      DJANGO_SECRET_KEY: '+80bii=$%g+7tn8s9s(*3)v)_exz2t38^@%-p_q7s4)c+)jb8m'
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      DJANO_ADMIN_PATH: 'secret/'
+      DJANGO_SECRET_KEY: '+80bii=$%g+7tn8s9s(*3)v)_exz2t38^@%-p_q7s4)c+)jb8m' # For development only!!! Generate your own key for production at `https://djecrety.ir/`
+      DJANGO_ALLOWED_HOSTS: '127.0.0.1,localhost'
+      DJANGO_ALLOWED_CSRF_TRUSTED_ORIGINS: 'http://127.0.0.1,http://localhost'
   
   db:
     image: postgres
