@@ -159,18 +159,34 @@ function bulmaInit(loadedElement) {
 
     // Add a click event on each of them
     $navbarBurgers.forEach( el => {
-        el.addEventListener('click', () => {
-
         // Get the target from the "data-target" attribute
         const target = el.dataset.target;
         const $target = document.getElementById(target);
 
+        el.addEventListener('click', () => {
         // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
         el.classList.toggle('is-active');
         $target.classList.toggle('is-active');
-
         });
+
+        $target.addEventListener('htmx:afterRequest', () => {
+            closeNavMenu(el, $target);
+        });
+
+        document.body.addEventListener('click', (event) => {
+            if(event.target.closest(".navbar") == null) {
+                closeNavMenu(el, $target);
+            }
+        });
+
     });
+
+    function closeNavMenu(navbarBurger, navbarMenu) {
+        if(!navbarBurger.classList.contains('is-active')) return;
+
+        navbarBurger.classList.remove('is-active');
+        navbarMenu.classList.remove('is-active');
+    }
 
     loadedElement.querySelectorAll('.notification .delete, .message .delete').forEach((deleteButton) => {
         const deleteable = deleteButton.closest('.notification, .message');
