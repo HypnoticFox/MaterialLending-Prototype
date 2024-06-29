@@ -1,3 +1,9 @@
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let speechRecognition;
+let activeSpeechRecognitionControl;
+
 window.isMobile = function() {
     let check = false;
     (function(a) {
@@ -8,16 +14,28 @@ window.isMobile = function() {
     return check;
 }
 
+if (document.readyState !== 'loading') {
+    initCode(document);
+} else {
+    document.addEventListener('DOMContentLoaded', function () {
+        initCode(document);
+    });
+}
+
+let skippedFirstLoad = false;
+
 htmx.onLoad((elt) => {
-    bulmaInit(elt);
-    webSpeechInit(elt);
+    if (!skippedFirstLoad) {
+        skippedFirstLoad = true;
+        return;
+    }
+    initCode(elt);
 });
 
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-let speechRecognition;
-let activeSpeechRecognitionControl;
+function initCode(elt) {
+    bulmaInit(elt);
+    webSpeechInit(elt);
+}
 
 function supportsSpeechRecognition() {
     return !!SpeechRecognition;
@@ -56,39 +74,15 @@ function webSpeechInit(loadedElement) {
                 addSpeechRecognitionEventHandlers(inputField, animationCircle);
 
                 speechRecognition.start();
-                console.log("speech recognition started");
 
                 activeSpeechRecognitionControl = id;
                 animationCircle.classList.add('active');
             }
             else {
                 speechRecognition.stop();
-                console.log("speech recognition stopped");
             }
         });
     });
-}
-
-function addSpeechRecognitionIconEventHandlers() {
-    event.stopPropagation();
-
-    if (activeSpeechRecognitionControl != null && activeSpeechRecognitionControl !== id) { return; }
-
-    if(speechRecognition == null) {
-        speechRecognition = new SpeechRecognition();
-        speechRecognition.lang = document.documentElement.lang || 'en';
-        addSpeechRecognitionEventHandlers(inputField, animationCircle);
-
-        speechRecognition.start();
-        console.log("speech recognition started");
-
-        activeSpeechRecognitionControl = id;
-        animationCircle.classList.add('active');
-    }
-    else {
-        speechRecognition.stop();
-        console.log("speech recognition stopped");
-    }
 }
 
 function addSpeechRecognitionEventHandlers(inputField, animationCircle) {

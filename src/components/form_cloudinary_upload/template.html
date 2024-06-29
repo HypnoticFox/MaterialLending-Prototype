@@ -6,7 +6,13 @@
 <div id="upload-image-field" class="field">
     <div class="block upload-image-block">
         <figure class="image">
-            <img id="upload-image" style="max-height: 50vh; width: auto;" src="{% cloudinary_url image_public_id type="authenticated" sign_url="True" aspect_ratio="1:1" height=1024 crop="auto" gravity="auto" fetch_format="jpg" %}">
+            <img 
+                id="upload-image" 
+                style="max-height: 50vh; width: auto;" 
+                {% if image_public_id %}
+                    src="{% cloudinary_url image_public_id type="authenticated" sign_url="True" aspect_ratio="1:1" height=1024 crop="auto" gravity="auto" fetch_format="jpg" %}"
+                {% endif %}
+            >
         </figure>
     </div>
     
