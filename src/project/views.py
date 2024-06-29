@@ -7,6 +7,9 @@ import json
 from pprint import pprint
 
 def health_check(request):
+    return HttpResponse(status=204)
+
+def health_check_with_db(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT 1")
     return HttpResponse(status=204)

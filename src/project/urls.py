@@ -33,5 +33,6 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("cloudinary-upload-sign/", views.generate_cloudinary_upload_signature, name="cloudinary-upload-signature"),
     path("health-check/", views.health_check, name="health-check"),
+    path("health-check-with-db/", views.health_check_with_db, name="health-check-with-db"),
     path("", include("home.urls")),
 ]
