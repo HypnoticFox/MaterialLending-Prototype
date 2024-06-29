@@ -1,19 +1,12 @@
-if (document.readyState !== 'loading') {
-    initCode();
-} else {
-    document.addEventListener('DOMContentLoaded', function () {
-        initCode();
-    });
-}
-
-function initCode() {
-    initCloudinary();
-}
+initCloudinary();
 
 function initCloudinary() {
     const cloudinaryDataElement = document.querySelector("#cloudinary-upload-info");
 
-    if(cloudinaryDataElement == null) { console.error("#cloudinary-upload-info not found"); return; }
+    if(cloudinaryDataElement == null) { 
+        console.error("#cloudinary-upload-info not found"); 
+        return; 
+    }
 
     const cloudinaryUploadInfo = JSON.parse(cloudinaryDataElement.textContent);
 

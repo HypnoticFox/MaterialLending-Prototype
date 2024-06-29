@@ -1,9 +1,3 @@
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-let speechRecognition;
-let activeSpeechRecognitionControl;
-
 window.isMobile = function() {
     let check = false;
     (function(a) {
@@ -14,34 +8,33 @@ window.isMobile = function() {
     return check;
 }
 
+window.skipHtmxLoad = false;
+
 if (document.readyState !== 'loading') {
-    initCode(document);
-} else {
-    document.addEventListener('DOMContentLoaded', function () {
-        initCode(document);
-    });
+    window.skipHtmxLoad = true;
+    initCodeSite(document);
 }
 
-let skippedFirstLoad = false;
-
 htmx.onLoad((elt) => {
-    if (!skippedFirstLoad) {
-        skippedFirstLoad = true;
+    if (window.skipHtmxLoad) {
+        window.skipHtmxLoad = false;
         return;
     }
-    initCode(elt);
+    initCodeSite(elt);
 });
 
-function initCode(elt) {
+function initCodeSite(elt) {
     bulmaInit(elt);
     webSpeechInit(elt);
 }
 
-function supportsSpeechRecognition() {
-    return !!SpeechRecognition;
-}
-
 function webSpeechInit(loadedElement) {
+    const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    let speechRecognition;
+    let activeSpeechRecognitionControl;
+
     if (!supportsSpeechRecognition()) { return; }
 
     loadedElement.querySelectorAll('.control.has-speech-recognition').forEach((speechControl, i) => {
@@ -83,62 +76,67 @@ function webSpeechInit(loadedElement) {
             }
         });
     });
-}
 
-function addSpeechRecognitionEventHandlers(inputField, animationCircle) {
-    speechRecognition.onresult = (event) => {
-        inputField.value = event.results[0][0].transcript;
+    function supportsSpeechRecognition() {
+        return !!SpeechRecognition;
     }
+
+    function addSpeechRecognitionEventHandlers(inputField, animationCircle) {
+        speechRecognition.onresult = (event) => {
+            inputField.value = event.results[0][0].transcript;
+        }
+        
+        speechRecognition.onnomatch = () => {
+            console.log("SpeechRecognition: Speech not recognized.");
+        }
     
-    speechRecognition.onnomatch = () => {
-        console.log("SpeechRecognition: Speech not recognized.");
-    }
-
-    speechRecognition.onerror = (event) => {
-        switch (event.error) {
-            case "audio-capture":
-                console.error("SpeechRecognition Error: Audio capture failed.");
-                break;
-            case "network":
-                console.error("SpeechRecognition Error: Required network communication failed.");
-                break;
-            case "not-allowed":
-                console.log("SpeechRecognition Error: Speech input is not allowed.");
-                disableSpeechRecognition();
-                break;
-            case "service-not-allowed":
-                console.log("SpeechRecognition Error: SpeechRecognition service is not allowed.");
-                disableSpeechRecognition();
-                break;
-            case "language-not-supported":
-                console.error("SpeechRecognition Error: SpeechRecognition language is not supported.");
-                disableSpeechRecognition();
-                break;
+        speechRecognition.onerror = (event) => {
+            switch (event.error) {
+                case "audio-capture":
+                    console.error("SpeechRecognition Error: Audio capture failed.");
+                    break;
+                case "network":
+                    console.error("SpeechRecognition Error: Required network communication failed.");
+                    break;
+                case "not-allowed":
+                    console.log("SpeechRecognition Error: Speech input is not allowed.");
+                    disableSpeechRecognition();
+                    break;
+                case "service-not-allowed":
+                    console.log("SpeechRecognition Error: SpeechRecognition service is not allowed.");
+                    disableSpeechRecognition();
+                    break;
+                case "language-not-supported":
+                    console.error("SpeechRecognition Error: SpeechRecognition language is not supported.");
+                    disableSpeechRecognition();
+                    break;
+            }
+        }
+    
+        speechRecognition.onend = () => {
+            speechRecognitionCleanup(animationCircle);
         }
     }
-
-    speechRecognition.onend = () => {
-        speechRecognitionCleanup(animationCircle);
+    
+    function speechRecognitionCleanup(animationCircle) {
+        speechRecognition = null;
+        activeSpeechRecognitionControl = null;
+        animationCircle.classList.remove('active');
+    }
+    
+    function disableSpeechRecognition() {
+        document.querySelectorAll('.control.has-speech-recognition .speech-recognition-icon').forEach((speechRecognitionIconContainer) => {
+            const speechRecognitionIcon = speechRecognitionIconContainer.querySelector('iconify-icon');
+            speechRecognitionIcon.setAttribute('icon', 'ph:microphone-slash');
+    
+            speechRecognitionIconContainer.addEventListener('click', (event) => {
+                event.stopImmediatePropagation();
+                event.stopPropagation();
+            }, true);
+        })
     }
 }
 
-function speechRecognitionCleanup(animationCircle) {
-    speechRecognition = null;
-    activeSpeechRecognitionControl = null;
-    animationCircle.classList.remove('active');
-}
-
-function disableSpeechRecognition() {
-    document.querySelectorAll('.control.has-speech-recognition .speech-recognition-icon').forEach((speechRecognitionIconContainer) => {
-        const speechRecognitionIcon = speechRecognitionIconContainer.querySelector('iconify-icon');
-        speechRecognitionIcon.setAttribute('icon', 'ph:microphone-slash');
-
-        speechRecognitionIconContainer.addEventListener('click', (event) => {
-            event.stopImmediatePropagation();
-            event.stopPropagation();
-        }, true);
-    })
-}
 
 function bulmaInit(loadedElement) {
     loadedElement.querySelectorAll('.dropdown').forEach((dropdown) => {

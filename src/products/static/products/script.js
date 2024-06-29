@@ -1,14 +1,4 @@
-if (document.readyState !== 'loading') {
-    initCode();
-} else {
-    document.addEventListener('DOMContentLoaded', function () {
-        initCode();
-    });
-}
-
-function initCode() {
-    initProductCategory();
-}
+initProductCategory();
 
 function initProductCategory() {
     const urlParts = window.location.pathname.split('/').filter(x => x);
