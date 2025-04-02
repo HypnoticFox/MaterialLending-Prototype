@@ -1,0 +1,15 @@
+name:
+  Prototype HealthCheck
+
+on:
+  schedule:
+    - cron: "*/6 * * * *"
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calling healtcheck endpoint with cURL
+        env:
+          PROTOTYPE_HEALTHCHECK_URL: ${{ secrets.PROTOTYPE_HEALTHCHECK_URL }}
+        run: curl $PROTOTYPE_HEALTHCHECK_URL
